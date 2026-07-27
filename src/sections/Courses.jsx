@@ -1,120 +1,109 @@
-import { motion } from 'framer-motion';
-import { Eye, ArrowRight, Sparkles, Flame, Zap, Award } from 'lucide-react';
+import { useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { Eye, ArrowRight, Sparkles, Flame, Zap } from 'lucide-react';
 import { COURSES } from '../data/courses.js';
 import { useCourse } from '../components/CourseContext.jsx';
 
-// Dinamik va jonli SVG illyustratsiyalar (Har bir kurs uchun o'ziga xos dizayn)
+// Dinamik va jonli SVG illyustratsiyalar
 const CourseImages = {
   dasturlash: () => (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md">
+    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md transition-transform duration-500 group-hover:scale-105">
       <defs>
         <linearGradient id="progGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#1E293B" />
           <stop offset="100%" stopColor="#0F172A" />
         </linearGradient>
       </defs>
-      <rect x="10" y="12" width="100" height="76" rx="12" fill="url(#progGrad)" />
-      <rect x="16" y="18" width="88" height="52" rx="6" fill="#090D16" />
-      {/* Kod satrlari */}
+      <rect x="10" y="12" width="100" height="76" rx="14" fill="url(#progGrad)" />
+      <rect x="16" y="18" width="88" height="52" rx="8" fill="#090D16" />
       <circle cx="24" cy="28" r="3" fill="#EF4444" />
       <circle cx="34" cy="28" r="3" fill="#F59E0B" />
       <circle cx="44" cy="28" r="3" fill="#10B981" />
-      <rect x="22" y="38" width="35" height="4" rx="2" fill="#38BDF8" />
-      <rect x="22" y="48" width="55" height="4" rx="2" fill="#34D399" />
-      <rect x="22" y="58" width="25" height="4" rx="2" fill="#F472B6" />
-      <rect x="52" y="58" width="30" height="4" rx="2" fill="#FCD34D" />
-      {/* Klaviatura bazasi */}
-      <path d="M 30 88 L 90 88 L 100 100 L 20 100 Z" fill="#334155" opacity="0.9" />
-      <rect x="35" y="92" width="50" height="4" rx="2" fill="#64748B" />
-      <text x="75" y="72" fill="#38BDF8" fontSize="13" fontWeight="900" fontFamily="monospace">{'</>'}</text>
+      <rect x="22" y="38" width="40" height="4" rx="2" fill="#38BDF8" />
+      <rect x="22" y="48" width="60" height="4" rx="2" fill="#34D399" />
+      <rect x="22" y="58" width="28" height="4" rx="2" fill="#F472B6" />
+      <rect x="54" y="58" width="32" height="4" rx="2" fill="#FCD34D" />
+      <path d="M 26 88 L 94 88 L 102 100 L 18 100 Z" fill="#334155" opacity="0.9" />
+      <rect x="34" y="92" width="52" height="4" rx="2" fill="#64748B" />
+      <text x="73" y="72" fill="#38BDF8" fontSize="14" fontWeight="950" fontFamily="monospace">{'</>'}</text>
     </svg>
   ),
   
   ingliz: () => (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md">
+    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md transition-transform duration-500 group-hover:scale-105">
       <defs>
         <linearGradient id="engGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#059669" />
           <stop offset="100%" stopColor="#047857" />
         </linearGradient>
       </defs>
-      <rect x="15" y="15" width="90" height="90" rx="16" fill="url(#engGrad)" />
-      {/* Kitob varoqlari */}
-      <path d="M 60 30 C 70 25, 90 25, 100 30 L 100 90 C 90 85, 70 85, 60 90 Z" fill="#F0FDF4" />
-      <path d="M 60 30 C 50 25, 30 25, 20 30 L 20 90 C 30 85, 50 85, 60 90 Z" fill="#DCFCE7" />
-      {/* Matn çizgileri */}
-      <line x1="30" y1="40" x2="50" y2="42" stroke="#059669" strokeWidth="3" strokeLinecap="round" />
-      <line x1="30" y1="52" x2="45" y2="54" stroke="#059669" strokeWidth="3" strokeLinecap="round" />
-      <line x1="70" y1="40" x2="90" y2="42" stroke="#047857" strokeWidth="3" strokeLinecap="round" />
-      <line x1="70" y1="52" x2="85" y2="54" stroke="#047857" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="60" cy="60" r="14" fill="#FEF08A" />
-      <text x="54" y="65" fontSize="12">abc</text>
+      <rect x="15" y="15" width="90" height="90" rx="18" fill="url(#engGrad)" />
+      <path d="M 60 28 C 70 23, 92 23, 102 28 L 102 92 C 92 87, 70 87, 60 92 Z" fill="#F0FDF4" />
+      <path d="M 60 28 C 50 23, 28 23, 18 28 L 18 92 C 28 87, 50 87, 60 92 Z" fill="#DCFCE7" />
+      <line x1="28" y1="38" x2="48" y2="40" stroke="#059669" strokeWidth="3.5" strokeLinecap="round" />
+      <line x1="28" y1="50" x2="44" y2="52" stroke="#059669" strokeWidth="3.5" strokeLinecap="round" />
+      <line x1="72" y1="38" x2="92" y2="40" stroke="#047857" strokeWidth="3.5" strokeLinecap="round" />
+      <line x1="72" y1="50" x2="88" y2="52" stroke="#047857" strokeWidth="3.5" strokeLinecap="round" />
+      <circle cx="60" cy="60" r="15" fill="#FEF08A" />
+      <text x="52" y="65" fill="#1E293B" fontSize="11" fontWeight="800">abc</text>
     </svg>
   ),
   
   matematika: () => (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md">
+    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md transition-transform duration-500 group-hover:scale-105">
       <defs>
         <linearGradient id="mathGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#7C3AED" />
           <stop offset="100%" stopColor="#5B21B6" />
         </linearGradient>
       </defs>
-      <rect x="12" y="12" width="96" height="96" rx="16" fill="url(#mathGrad)" />
-      {/* Koordinat o'qlari */}
-      <line x1="25" y1="85" x2="95" y2="85" stroke="#DDD6FE" strokeWidth="2" strokeLinecap="round" />
-      <line x1="25" y1="85" x2="25" y2="25" stroke="#DDD6FE" strokeWidth="2" strokeLinecap="round" />
-      {/* Grafik egri chizig'i */}
-      <path d="M 25 75 Q 50 30, 70 55 T 95 35" fill="none" stroke="#FDE047" strokeWidth="3.5" strokeLinecap="round" />
-      {/* Geometrik elementlar */}
-      <circle cx="70" cy="55" r="4" fill="#F43F5E" />
-      <text x="65" y="25" fill="#FFFFFF" fontSize="14" fontWeight="800">f(x)</text>
-      <text x="75" y="98" fill="#DDD6FE" fontSize="11" fontWeight="700">∑ π ∞</text>
+      <rect x="12" y="12" width="96" height="96" rx="18" fill="url(#mathGrad)" />
+      <line x1="22" y1="88" x2="98" y2="88" stroke="#DDD6FE" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="22" y1="88" x2="22" y2="22" stroke="#DDD6FE" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M 22 78 Q 48 25, 68 52 T 98 32" fill="none" stroke="#FDE047" strokeWidth="4" strokeLinecap="round" />
+      <circle cx="68" cy="52" r="4.5" fill="#F43F5E" />
+      <text x="62" y="24" fill="#FFFFFF" fontSize="13" fontWeight="900">f(x)</text>
+      <text x="70" y="102" fill="#DDD6FE" fontSize="11" fontWeight="800">∑ π ∞</text>
     </svg>
   ),
   
   robototexnika: () => (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md">
+    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md transition-transform duration-500 group-hover:scale-105">
       <defs>
         <linearGradient id="roboGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#F43F5E" />
           <stop offset="100%" stopColor="#BE123C" />
         </linearGradient>
       </defs>
-      <rect x="12" y="12" width="96" height="96" rx="16" fill="url(#roboGrad)" />
-      {/* Robot boshi */}
-      <rect x="36" y="32" width="48" height="40" rx="8" fill="#FFFFFF" />
-      <circle cx="50" cy="48" r="6" fill="#0EA5E9" />
-      <circle cx="70" cy="48" r="6" fill="#0EA5E9" />
-      <rect x="52" y="60" width="16" height="4" rx="2" fill="#94A3B8" />
-      {/* Antenna */}
-      <line x1="60" y1="32" x2="60" y2="20" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="60" cy="18" r="4" fill="#FDE047" />
-      {/* Tishli raketka detali */}
-      <path d="M 30 85 L 90 85 L 80 98 L 40 98 Z" fill="#881337" />
-      <circle cx="60" cy="91" r="3" fill="#FDE047" />
+      <rect x="12" y="12" width="96" height="96" rx="18" fill="url(#roboGrad)" />
+      <rect x="34" y="30" width="52" height="42" rx="9" fill="#FFFFFF" />
+      <circle cx="48" cy="46" r="6.5" fill="#0EA5E9" />
+      <circle cx="72" cy="46" r="6.5" fill="#0EA5E9" />
+      <rect x="50" y="58" width="20" height="4.5" rx="2" fill="#94A3B8" />
+      <line x1="60" y1="30" x2="60" y2="18" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" />
+      <circle cx="60" cy="16" r="4.5" fill="#FDE047" />
+      <path d="M 28 86 L 92 86 L 82 98 L 38 98 Z" fill="#881337" />
+      <circle cx="60" cy="92" r="3.5" fill="#FDE047" />
     </svg>
   ),
   
   'mental-arifmetika': () => (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md">
+    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md transition-transform duration-500 group-hover:scale-105">
       <defs>
         <linearGradient id="mentalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#0EA5E9" />
           <stop offset="100%" stopColor="#0369A1" />
         </linearGradient>
       </defs>
-      <rect x="12" y="12" width="96" height="96" rx="16" fill="url(#mentalGrad)" />
-      {/* Abakus ramkasi */}
-      <rect x="25" y="25" width="70" height="70" rx="6" fill="#F8FAFC" opacity="0.95" />
-      <line x1="60" y1="25" x2="60" y2="95" stroke="#94A3B8" strokeWidth="3" />
-      {/* Suyaklar (Beads) */}
-      <circle cx="60" cy="40" r="8" fill="#F43F5E" />
+      <rect x="12" y="12" width="96" height="96" rx="18" fill="url(#mentalGrad)" />
+      <rect x="24" y="24" width="72" height="72" rx="8" fill="#F8FAFC" opacity="0.95" />
+      <line x1="60" y1="24" x2="60" y2="96" stroke="#94A3B8" strokeWidth="3.5" />
+      <circle cx="60" cy="38" r="8" fill="#F43F5E" />
       <circle cx="60" cy="60" r="8" fill="#F59E0B" />
-      <circle cx="60" cy="80" r="8" fill="#10B981" />
-      <text x="32" y="45" fill="#0F172A" fontSize="13" fontWeight="900">1</text>
-      <text x="32" y="65" fill="#0F172A" fontSize="13" fontWeight="900">2</text>
-      <text x="75" y="85" fill="#0F172A" fontSize="13" fontWeight="900">⚡</text>
+      <circle cx="60" cy="82" r="8" fill="#10B981" />
+      <text x="32" y="44" fill="#0F172A" fontSize="12" fontWeight="900">1</text>
+      <text x="32" y="66" fill="#0F172A" fontSize="12" fontWeight="900">2</text>
+      <text x="74" y="86" fill="#0F172A" fontSize="13" fontWeight="900">⚡</text>
     </svg>
   ),
 };
@@ -128,14 +117,13 @@ const cardVariants = {
   }),
 };
 
-// Har bir kurs kartochkasi uchun premium ranglar palitrasi
 const getCardTheme = (index) => {
   const themes = [
     {
       bgGrad: 'from-sky-500/10 via-indigo-500/5 to-transparent',
       border: 'hover:border-sky-500/40 border-slate-200/80',
       badge: 'bg-sky-50 text-sky-700 border-sky-200',
-      glow: 'bg-sky-400/10',
+      glow: 'bg-sky-400/15',
       accent: 'text-sky-600',
       btnBg: 'bg-sky-600 hover:bg-sky-700 text-white shadow-sky-500/25',
     },
@@ -143,7 +131,7 @@ const getCardTheme = (index) => {
       bgGrad: 'from-emerald-500/10 via-teal-500/5 to-transparent',
       border: 'hover:border-emerald-500/40 border-slate-200/80',
       badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-      glow: 'bg-emerald-400/10',
+      glow: 'bg-emerald-400/15',
       accent: 'text-emerald-600',
       btnBg: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-500/25',
     },
@@ -151,7 +139,7 @@ const getCardTheme = (index) => {
       bgGrad: 'from-purple-500/10 via-violet-500/5 to-transparent',
       border: 'hover:border-purple-500/40 border-slate-200/80',
       badge: 'bg-purple-50 text-purple-700 border-purple-200',
-      glow: 'bg-purple-400/10',
+      glow: 'bg-purple-400/15',
       accent: 'text-purple-600',
       btnBg: 'bg-purple-600 hover:bg-purple-700 text-white shadow-purple-500/25',
     },
@@ -159,7 +147,7 @@ const getCardTheme = (index) => {
       bgGrad: 'from-rose-500/10 via-pink-500/5 to-transparent',
       border: 'hover:border-rose-500/40 border-slate-200/80',
       badge: 'bg-rose-50 text-rose-700 border-rose-200',
-      glow: 'bg-rose-400/10',
+      glow: 'bg-rose-400/15',
       accent: 'text-rose-600',
       btnBg: 'bg-rose-600 hover:bg-rose-700 text-white shadow-rose-500/25',
     },
@@ -167,7 +155,7 @@ const getCardTheme = (index) => {
       bgGrad: 'from-amber-500/10 via-orange-500/5 to-transparent',
       border: 'hover:border-amber-500/40 border-slate-200/80',
       badge: 'bg-amber-50 text-amber-700 border-amber-200',
-      glow: 'bg-amber-400/10',
+      glow: 'bg-amber-400/15',
       accent: 'text-amber-600',
       btnBg: 'bg-amber-600 hover:bg-amber-700 text-white shadow-amber-500/25',
     },
@@ -181,6 +169,42 @@ function CourseCard({ course, index }) {
   const { setSelectedCourseId } = useCourse();
   const ImageComponent = CourseImages[id] || CourseImages.dasturlash;
 
+  // 3D Tilt Motion Hook-lari
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+
+    x.set(xPct);
+    y.set(yPct);
+
+    setMousePosition({ x: mouseX, y: mouseY });
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+    setIsHovered(false);
+  };
+
   const handleShowDetails = () => {
     setSelectedCourseId(id);
     const showcaseElement = document.getElementById('showcase');
@@ -193,29 +217,47 @@ function CourseCard({ course, index }) {
   };
 
   return (
-    <motion.article
+    <motion.div
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
       variants={cardVariants}
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: '-50px' }}
       custom={index}
-      className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-white/80 backdrop-blur-xl border ${theme.border} shadow-lg shadow-slate-100 transition-all duration-500 hover:-translate-y-2.5 hover:shadow-2xl cursor-pointer`}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={handleMouseLeave}
       onClick={handleShowDetails}
+      className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-white/90 backdrop-blur-xl border ${theme.border} shadow-xl shadow-slate-200/50 transition-all duration-300 hover:shadow-2xl cursor-pointer`}
     >
+      {/* Spotlight Effect */}
+      {isHovered && (
+        <div 
+          className="pointer-events-none absolute -inset-px rounded-3xl opacity-50 transition-opacity duration-300 z-0"
+          style={{
+            background: `radial-gradient(300px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(59, 130, 246, 0.12), transparent 80%)`,
+          }}
+        />
+      )}
+
       {/* Background Gradient Glow */}
       <div className={`absolute inset-0 bg-gradient-to-br ${theme.bgGrad} opacity-80 pointer-events-none transition-opacity duration-500 group-hover:opacity-100`} />
       <div className={`absolute -right-16 -top-16 h-44 w-44 rounded-full ${theme.glow} blur-2xl pointer-events-none`} />
 
-      <div className="relative z-10 p-6 sm:p-7 flex-1 flex flex-col">
-        {/* Yuqori qism: SVG Illyustratsiya */}
+      <div className="relative z-10 p-6 sm:p-7 flex-1 flex flex-col" style={{ transform: "translateZ(30px)" }}>
+        {/* SVG Illyustratsiya */}
         <div className="relative w-full h-44 mb-5 rounded-2xl overflow-hidden bg-slate-900/5 border border-slate-100 shadow-inner p-3 transition-transform duration-500 group-hover:scale-[1.03]">
           <div className="w-full h-full flex items-center justify-center">
             <ImageComponent />
           </div>
-          {/* Badge over image */}
-          <div className="absolute top-3 right-3">
-            <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${theme.badge} border shadow-sm backdrop-blur-md bg-white/90`}>
-              <Zap size={12} className="fill-current" />
+          {/* Badge */}
+          <div className="absolute top-3 right-3 z-10">
+            <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${theme.badge} border shadow-sm backdrop-blur-md bg-white/95`}>
+              <Zap size={12} className="fill-current animate-pulse" />
               {level || "Boshlang'ich"}
             </span>
           </div>
@@ -224,7 +266,7 @@ function CourseCard({ course, index }) {
         {/* Sarlavha va Tavsif */}
         <div className="flex-1">
           <div className="flex items-center gap-2.5 mb-2">
-            <div className={`p-2 rounded-xl bg-slate-100 ${theme.accent}`}>
+            <div className={`p-2 rounded-xl bg-slate-100 ${theme.accent} transition-transform duration-300 group-hover:scale-110`}>
               <Icon size={18} strokeWidth={2.2} />
             </div>
             <h3 className="text-xl font-extrabold text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors">
@@ -237,9 +279,9 @@ function CourseCard({ course, index }) {
           </p>
         </div>
 
-        {/* Kurs xususiyatlari (Davomiyligi va Narxi) */}
+        {/* Xususiyatlar */}
         <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-500">
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1 bg-slate-100 px-3 py-1 rounded-lg">
             <Sparkles size={13} className={theme.accent} />
             {duration || "3 oy"}
           </span>
@@ -248,7 +290,7 @@ function CourseCard({ course, index }) {
           </span>
         </div>
 
-        {/* Pastki tugma qismi */}
+        {/* Tugma */}
         <div className="mt-5 pt-2">
           <motion.button
             onClick={(e) => {
@@ -265,16 +307,17 @@ function CourseCard({ course, index }) {
           </motion.button>
         </div>
       </div>
-    </motion.article>
+    </motion.div>
   );
 }
 
 export default function Courses() {
   return (
     <section id="courses" className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-50 py-24 lg:py-32 text-slate-900">
-      {/* Background Decor Elements */}
-      <div className="absolute top-1/3 left-0 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-0 w-96 h-96 bg-indigo-200/20 rounded-full blur-3xl pointer-events-none" />
+      {/* Light Interactive Grid & Animated BG Elements */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-60 pointer-events-none" />
+      <div className="absolute top-1/4 left-10 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl pointer-events-none animate-pulse" />
+      <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl pointer-events-none animate-pulse" />
 
       <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
         {/* Section Header */}
@@ -285,7 +328,7 @@ export default function Courses() {
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 shadow-sm"
           >
-            <Flame size={15} className="text-blue-600 fill-blue-500" />
+            <Flame size={15} className="text-blue-600 fill-blue-500 animate-bounce" />
             <span className="text-xs font-extrabold uppercase tracking-widest text-blue-700">
               Bizning Ta'lim Yo'nalishlarimiz
             </span>
@@ -313,7 +356,7 @@ export default function Courses() {
         </div>
 
         {/* Courses Grid */}
-        <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 [perspective:1000px]">
           {COURSES.map((course, i) => (
             <CourseCard
               key={course.id}
