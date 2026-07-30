@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion';
-import { Target, Eye, Heart, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Target, Eye, Heart, Sparkles, Play, X, Youtube } from 'lucide-react';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const VALUES = [
@@ -26,6 +27,8 @@ const VALUES = [
 ];
 
 export default function About() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <section id="about" className="relative overflow-hidden bg-white py-24 text-slate-900">
       {/* Interactive Clean Dotted Background Pattern */}
@@ -68,8 +71,8 @@ export default function About() {
             </p>
 
             {/* Interactive Lottie Integration matching Hero Style */}
-            <div className="mt-8 flex items-center justify-start overflow-hidden">
-              <div className="relative w-full max-w-sm scale-105 transition-transform duration-500 ease-out hover:scale-115 cursor-pointer">
+            <div className="mt-6 flex items-center justify-start overflow-hidden">
+              <div className="relative w-full max-w-xs scale-105 transition-transform duration-500 ease-out hover:scale-115 cursor-pointer">
                 <DotLottieReact
                   src="https://lottie.host/da5b5b76-6e43-4bcc-9101-1a55f7a0e454/82jBfn8uqb.json"
                   loop
@@ -99,7 +102,108 @@ export default function About() {
             ))}
           </div>
         </div>
+
+        {/* 🎙️ YOUTUBE PODCAST VIDEO SECTION WITH ANIMATED BUTTON */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="mt-20 relative rounded-3xl overflow-hidden border border-slate-200 bg-slate-900 shadow-2xl"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
+            {/* Podcast Info */}
+            <div className="lg:col-span-5 p-8 lg:p-12 text-white">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-semibold mb-4">
+                <Youtube size={16} /> Shams Podcast #8
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                Inson doim to'laydi yo puli bilan yo vaqti bilan
+              </h3>
+              <p className="mt-3 text-sm text-slate-300 leading-relaxed">
+                Dilshodjon Bahriddinov bilan bo'lib o'tgan qiziqarli podkast. Hayotiy tajribalar, vaqt va pul qadri hamda ta'lim sohasidagi muhim haqiqatlar haqida.
+              </p>
+              
+              <div className="mt-8 flex items-center gap-4">
+                <motion.button
+                  onClick={() => setIsModalOpen(true)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold text-sm shadow-lg shadow-red-600/30 cursor-pointer transition-all hover:shadow-red-600/50"
+                >
+                  <Play size={16} className="fill-white" /> Videoni ko'rish
+                </motion.button>
+              </div>
+            </div>
+
+            {/* Video Thumbnail / Preview Cover */}
+            <div className="lg:col-span-7 relative h-72 sm:h-96 lg:h-[400px] w-full bg-slate-800 overflow-hidden group">
+              <img 
+                src="https://img.youtube.com/vi/fEQHCE0JQLw/maxresdefault.jpg" 
+                alt="Podcast thumbnail" 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
+              
+              {/* Animated Play Trigger Button */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <motion.button
+                  onClick={() => setIsModalOpen(true)}
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-white shadow-2xl shadow-red-600/50 cursor-pointer"
+                  aria-label="Play video"
+                >
+                  <Play size={32} className="fill-white ml-1" />
+                </motion.button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
+
+      {/* 🎬 YOUTUBE MODAL POPUP */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative w-full max-w-4xl bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-800"
+            >
+              {/* Close Button */}
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-slate-800/80 text-white hover:bg-red-600 transition-colors cursor-pointer"
+                aria-label="Close modal"
+              >
+                <X size={20} />
+              </button>
+
+              {/* YouTube Responsive Iframe */}
+              <div className="relative aspect-video w-full">
+                <iframe 
+                  className="w-full h-full"
+                  src="https://www.youtube.com/embed/fEQHCE0JQLw?autoplay=1" 
+                  title="Inson doim to'laydi yo puli bilan yo vaqti bilan. Dilshodjon Bahriddinov bilan Podcast #8" 
+                  frameBorder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                  referrerPolicy="strict-origin-when-cross-origin" 
+                  allowFullScreen
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
